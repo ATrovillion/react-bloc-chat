@@ -18,14 +18,18 @@ firebase.initializeApp(config);
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {rooms: RoomList}
+    this.state = {
+      rooms: RoomList
+    }
   }
+
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
         </header>
-        <div className="room-list">
+        <div className="rooms-list">
           <RoomList
             firebase={firebase}
            />
