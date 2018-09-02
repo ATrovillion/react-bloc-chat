@@ -22,6 +22,7 @@ class RoomList extends Component {
     }
 
     createRoom(e) {
+        e.preventDefault();
         const newRoomName = this.state.newRoomName
         if (!this.state.newRoomName) {return}
         const newRoom = {name: this.state.newRoomName};
