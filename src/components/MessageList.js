@@ -4,28 +4,30 @@ class MessageList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rooms: []
+            messages: [],
+            newMessageName: ''
         };
-    this.roomsRef = this.props.firebase.database().ref('rooms');
+    this.roomsRef = this.props.firebase.database().ref('messages');
     }
 
     componentDidMount() {
         this.roomsRef.on('child_added', snapshot => {
+            const room = snapshot.val();
             const message = snapshot.val();
-            room.message.key = snapshot.key;
+            room.messages.key = snapshot.key;
             this.setState( {messages: this.state.rooms.messages.concat( message ) });
         })
     }
 
-    createMessage(e) {
-        const newMessageName = this.state.newMessageName
+    /*createMessage(e) {
+        const newMessageContent = this.state.newMessageContent
         if (!this.state.newMessageName) {return}
         const newMessage = {name: this.state.newMessageName};
         this.setState({ messages: [...this.state.rooms.messages, newMessage], newMessageName: ''})
         this.roomsRef.room.message.push({
             name: newMessageName
         });
-    }
+    }*/
 
     handleChange(e) {
         console.log(e)
@@ -37,16 +39,18 @@ class MessageList extends Component {
             <div className="message-list">
                 <div>
                     <ol>
-                        {this.state.rooms.message.map((message) =>
-                        <p key={message.key}>{message.name}</p>)}
+                        {this.state.messages.map((messages) =>
+                        <p key={messages.key}>{messages.roomId} {messages.content}</p>)}
                     </ol>
                 </div>
                 <div className="add-message-form">
                     <form onSubmit={ (e) => this.createMessage(e) }>
-                    Which chat room would you like to add a message in?
-                    <input type="text" value={ this.state.roomId }
-                    Title of new message:
-                    <input type="text" value={ this.state.newMessageName } onChange= { (e) => this.handleChange(e) } ></input>
+                    What is your user name?
+                    <input type="text" value={ this.state.userId } ></input><br/>
+                    In which chat room would you like to add a message?
+                    <input type="text" value={ this.state.roomId } ></input><br/>
+                    What do you want your new message to say?
+                    <input type="text" value={ this.state.content } onChange= { (e) => this.handleChange(e) } ></input>
                     <input type="submit"></input>
                     </form>
                 </div>

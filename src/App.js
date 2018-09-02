@@ -20,7 +20,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: RoomList
+      rooms: RoomList,
+      messages: MessageList
     }
   }
 
