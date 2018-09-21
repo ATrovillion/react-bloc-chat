@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
+import MessageList from './components/MessageList';
 
 // Initialize Firebase
 var config = {
@@ -19,8 +20,16 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: RoomList
+      rooms: RoomList,
+      messages: MessageList,
+      activeRoom: -1
     }
+  }
+
+  handleActiveRoom(room) {
+      this.setState( { activeRoom: room} )
+      console.log(room)
+      console.log(room.key)
   }
 
 
@@ -32,7 +41,15 @@ class App extends Component {
         <div className="rooms-list">
           <RoomList
             firebase={firebase}
+            handleActiveRoom={(room) => this.handleActiveRoom(room)}
            />
+        </div>
+        <div className="message-list">
+        {/*conditionally render h1 tag with title of activeRoom*/}
+          <MessageList
+            firebase={firebase}
+            activeRoom={this.state.activeRoom}
+          />
         </div>
       </div>
     );
