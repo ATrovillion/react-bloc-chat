@@ -21,8 +21,15 @@ class App extends Component {
     super(props);
     this.state = {
       rooms: RoomList,
-      messages: MessageList
+      messages: MessageList,
+      activeRoom: -1
     }
+  }
+
+  handleActiveRoom(room) {
+      this.setState( { activeRoom: room} )
+      console.log(room)
+      console.log(room.key)
   }
 
 
@@ -34,11 +41,14 @@ class App extends Component {
         <div className="rooms-list">
           <RoomList
             firebase={firebase}
+            handleActiveRoom={(room) => this.handleActiveRoom(room)}
            />
         </div>
         <div className="message-list">
+        {/*conditionally render h1 tag with title of activeRoom*/}
           <MessageList
             firebase={firebase}
+            activeRoom={this.state.activeRoom}
           />
         </div>
       </div>
