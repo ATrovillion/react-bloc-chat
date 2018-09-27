@@ -45,6 +45,7 @@ class MessageList extends Component {
                 <div className="messages-by-room">
                     <h1>{this.props.activeRoom.name}</h1>
                     <section>
+                        {/*table containing message information*/}
                         <table id="message-info">
                             <thead>
                                 <tr>

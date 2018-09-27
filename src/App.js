@@ -3,6 +3,7 @@ import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
+import User from './components/User';
 
 // Initialize Firebase
 var config = {
@@ -22,8 +23,15 @@ class App extends Component {
     this.state = {
       rooms: RoomList,
       messages: MessageList,
-      activeRoom: -1
+      activeRoom: -1,
+      user: null
+
     }
+  }
+
+  setUser(user) {
+    this.setState( {user: user} )
+    console.log(user)
   }
 
   handleActiveRoom(room) {
@@ -33,10 +41,12 @@ class App extends Component {
   }
 
 
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
+        <h1>Welcome to Bloc Chat!</h1>
         </header>
         <div className="rooms-list">
           <RoomList
@@ -45,10 +55,16 @@ class App extends Component {
            />
         </div>
         <div className="message-list">
-        {/*conditionally render h1 tag with title of activeRoom*/}
           <MessageList
             firebase={firebase}
             activeRoom={this.state.activeRoom}
+          />
+        </div>
+        <div className="user-name-auth">
+          <User
+            firebase={firebase}
+            setUser={ (user) => this.setUser(user)}
+            user={this.state.user}
           />
         </div>
       </div>
