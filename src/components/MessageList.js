@@ -5,7 +5,9 @@ class MessageList extends Component {
         super(props);
         this.state = {
             messages: [],
-            roomId: ''
+            roomId: '',
+            newMessageContent: '',
+            errorMessage: 'Please choose a chat room before creating messages!'
         };
 
     this.messagesRef = this.props.firebase.database().ref('messages');
@@ -24,15 +26,20 @@ class MessageList extends Component {
 
 
 
-    /*createMessage(e) {
-        const newMessageContent = this.state.newMessageContent
-        if (!this.state.newMessageName) {return}
-        const newMessage = {name: this.state.newMessageContent};
-        this.setState({ messages: [...this.state.messages, newMessage], newMessageContent: ''})
-        this.messagesRef.push({
-            content: newMessageContent
-        });
-    }*/
+    createMessage(e) {
+        e.preventDefault()
+        if (this.props.activeRoom !== -1) {
+            const newMessageContent = this.state.newMessageContent
+            if (!this.state.newMessageContent) {return}
+            const newMessage = {content: this.state.newMessageContent};
+            this.setState({ messages: [...this.state.messages, newMessage], newMessageContent: ''})
+            this.messagesRef.push({
+                content: newMessageContent,
+                userId: this.props.user.displayName,
+                roomId: this.props.activeRoom.key,
+                sentAt: this.props.firebase.database.ServerValue.TIMESTAMP
+            });}
+    }
 
     handleChange(e) {
         console.log(e)
@@ -43,7 +50,7 @@ class MessageList extends Component {
         return(
             <div className="message-list">
                 <div className="messages-by-room">
-                    <h1>{this.props.activeRoom.name}</h1>
+                    <h1>{this.props.activeRoom !==-1 ? this.props.activeRoom.name : "Please choose a chat room"}</h1>
                     <section>
                         {/*table containing message information*/}
                         <table id="message-info">
@@ -71,18 +78,15 @@ class MessageList extends Component {
                 </div>
                 {/*render form to add new message to a chat room*/}
                 <div className="add-message-form">
-                    <form onSubmit={ (e) => this.createMessage(e) }>
+                        <form onSubmit={ (e) => this.createMessage(e)}>
                             <fieldset>
                                 <legend>Create a new message</legend>
-                                What is your user name?
-                                <input type="text" value={ this.state.userId } ></input><br/>
-                                In which chat room would you like to add a message?
-                                <input type="text" value={ this.state.roomId } ></input><br/>
                                 What do you want your new message to say?
-                                <input type="text" value={ this.state.content } onChange= { (e) => this.handleChange(e) } ></input>
+                                <input type="text" value={ this.state.newMessageContent } onChange= { (e) => this.handleChange(e) } ></input>
                                 <input type="submit"></input>
                             </fieldset>
                     </form>
+                    {this.props.activeRoom===-1 ? <h1>{this.state.errorMessage}</h1> : <h1>Ready to create a new message!</h1> }
                 </div>
             </div>
         )
